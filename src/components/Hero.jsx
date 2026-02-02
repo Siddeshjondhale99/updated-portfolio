@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, FileText } from 'lucide-react';
 import { personalInfo } from '../data';
 import profileImg from '../assets/profile.png';
-import resumePdf from '../assets/resume.pdf';
+import resume from "../assets/resume.pdf";
 
 const Hero = () => {
     return (
@@ -34,7 +34,7 @@ const Hero = () => {
                         <SocialLink href={personalInfo.contact.github} icon={<Github />} label="GitHub" />
                         <SocialLink href={personalInfo.contact.linkedin} icon={<Linkedin />} label="LinkedIn" />
                         <SocialLink href={`mailto:${personalInfo.contact.email}`} icon={<Mail />} label="Email" />
-                        <a href={resumePdf} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 px-6 py-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-all text-gray-700 dark:text-white shadow-sm dark:shadow-none group">
+                        <a href={resume} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 px-6 py-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-all text-gray-700 dark:text-white shadow-sm dark:shadow-none group">
                             <span className="text-sm font-medium">Resume</span>
                             <FileText size={18} className="text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-white transition-colors" />
                         </a>
