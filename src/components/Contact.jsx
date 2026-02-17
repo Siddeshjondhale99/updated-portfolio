@@ -6,6 +6,35 @@ import { Link } from 'react-scroll';
 
 const Contact = () => {
     const [focusedInput, setFocusedInput] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setIsError(false);
+
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch("https://formsubmit.co/ajax/siddeshjondhale99@gmail.com", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                setIsSuccess(true);
+                e.target.reset();
+            } else {
+                setIsError(true);
+            }
+        } catch (error) {
+            setIsError(true);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     const inputClasses = (name) => `
         w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 
@@ -83,57 +112,97 @@ const Contact = () => {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 blur-2xl rounded-bl-3xl -z-10" />
                         
                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Send a Message</h3>
-                        <form action="https://formsubmit.co/siddeshjondhale99@gmail.com" method="POST" className="space-y-6">
-                            <div className="group">
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Name</label>
-                                <input 
-                                    type="text" 
-                                    name="name" 
-                                    id="name"
-                                    required 
-                                    onFocus={() => setFocusedInput('name')}
-                                    onBlur={() => setFocusedInput(null)}
-                                    className={inputClasses('name')}
-                                    placeholder="Your Name"
-                                />
-                            </div>
-                            <div className="group">
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Email</label>
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    id="email"
-                                    required 
-                                    onFocus={() => setFocusedInput('email')}
-                                    onBlur={() => setFocusedInput(null)}
-                                    className={inputClasses('email')}
-                                    placeholder="your@email.com"
-                                />
-                            </div>
-                            <div className="group">
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Message</label>
-                                <textarea 
-                                    name="message" 
-                                    id="message"
-                                    required 
-                                    rows="4"
-                                    onFocus={() => setFocusedInput('message')}
-                                    onBlur={() => setFocusedInput(null)}
-                                    className={`${inputClasses('message')} resize-none`}
-                                    placeholder="Your message..."
-                                ></textarea>
-                            </div>
-                            <input type="hidden" name="_captcha" value="false" />
-                            <motion.button 
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="submit" 
-                                className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 flex items-center justify-center space-x-2"
-                            >
-                                <span>Send Message</span>
-                                <Send size={20} />
-                            </motion.button>
-                        </form>
+                        
+                        {isSuccess ? (
+                           <motion.div 
+                               initial={{ opacity: 0, scale: 0.9 }}
+                               animate={{ opacity: 1, scale: 1 }}
+                               className="flex flex-col items-center justify-center text-center py-12"
+                           >
+                               <div className="w-16 h-16 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-6">
+                                   <Send size={32} />
+                               </div>
+                               <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h4>
+                               <p className="text-gray-600 dark:text-gray-400">
+                                   Thanks for reaching out. I'll get back to you as soon as possible.
+                               </p>
+                               <button 
+                                   onClick={() => setIsSuccess(false)}
+                                   className="mt-8 text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                               >
+                                   Send another message
+                               </button>
+                           </motion.div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="group">
+                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Name</label>
+                                    <input 
+                                        type="text" 
+                                        name="name" 
+                                        id="name"
+                                        required 
+                                        onFocus={() => setFocusedInput('name')}
+                                        onBlur={() => setFocusedInput(null)}
+                                        className={inputClasses('name')}
+                                        placeholder="Your Name"
+                                    />
+                                </div>
+                                <div className="group">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Email</label>
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        id="email"
+                                        required 
+                                        onFocus={() => setFocusedInput('email')}
+                                        onBlur={() => setFocusedInput(null)}
+                                        className={inputClasses('email')}
+                                        placeholder="your@email.com"
+                                    />
+                                </div>
+                                <div className="group">
+                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400">Message</label>
+                                    <textarea 
+                                        name="message" 
+                                        id="message"
+                                        required 
+                                        rows="4"
+                                        onFocus={() => setFocusedInput('message')}
+                                        onBlur={() => setFocusedInput(null)}
+                                        className={`${inputClasses('message')} resize-none`}
+                                        placeholder="Your message..."
+                                    ></textarea>
+                                </div>
+                                
+                                <input type="hidden" name="_subject" value="New submission from Portfolio" />
+                                <input type="hidden" name="_template" value="table" />
+                                <input type="hidden" name="_captcha" value="false" />
+
+                                {isError && (
+                                    <div className="p-4 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-xl text-sm">
+                                        Something went wrong. Please try again later.
+                                    </div>
+                                )}
+
+                                <motion.button 
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={`w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 flex items-center justify-center space-x-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                >
+                                    {isSubmitting ? (
+                                        <span>Sending...</span>
+                                    ) : (
+                                        <>
+                                            <span>Send Message</span>
+                                            <Send size={20} />
+                                        </>
+                                    )}
+                                </motion.button>
+                            </form>
+                        )}
                     </motion.div>
                 </div>
 
